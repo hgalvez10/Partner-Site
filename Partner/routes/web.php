@@ -11,10 +11,23 @@
 |
 */
 
+Auth::routes();
+
 Route::get('/', function () {
     return view('welcome');
 });
 
-Auth::routes();
+
 
 Route::get('/home', 'HomeController@index')->name('home');
+//Partner
+Route::get('partners', 'PartnerController@index');
+Route::get('partner/create', 'PartnerController@create');
+Route::post('partner', 'PartnerController@store');
+
+//Customer
+Route::get('customers', 'CustomerController@index');
+Route::get('customer/create', 'CustomerController@create');
+Route::post('customer', 'CustomerController@store');
+Route::get('buyDomain', 'CustomerController@buyDomain');
+Route::post('checkDomain', 'CustomerController@checkDomain');
