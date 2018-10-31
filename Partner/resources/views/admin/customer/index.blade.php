@@ -31,9 +31,9 @@
 				<thead>
 					<tr>
 						<th>Nombre</th>
+						<th>Organización</th>
 						<th>Email</th>
-						<th>País</th>
-						<th>Ciudad</th>
+						<th>Dirección</th>
 						<th>Estado</th>
 						<th class="disable-sorting text-center">Acciones</th>
 					</tr>
@@ -42,9 +42,9 @@
 					@foreach($customers as $customer)
 					<tr>
 						<td>{{ ucfirst($customer->name) }}</td>
+						<td>{{ $customer->org }}</td>
 						<td>{{ $customer->email }}</td>
-						<td>{{ $customer->country }}</td>
-						<td>{{ $customer->city }}</td>
+						<td>{{ $customer->address() }}</td>
 						<td>{{ $customer->status }}</td>
 
 						<td class="text-center">

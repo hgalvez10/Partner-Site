@@ -12,6 +12,11 @@ class Customer extends Model
      * @var array
      */
     protected $fillable = [
-        'id', 'name', 'email', 'city', 'country', 'status'
+        'id', 'name', 'org', 'street', 'city', 'sp', 'voice', 'email', 'status'
     ];
+
+    function address()
+    {
+    	return ucfirst($this->street).', '.ucfirst($this->city).', '.ucfirst($this->sp);
+    }
 }

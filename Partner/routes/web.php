@@ -31,3 +31,4 @@ Route::get('customer/create', 'CustomerController@create');
 Route::post('customer', 'CustomerController@store');
 Route::get('buyDomain', 'CustomerController@buyDomain');
 Route::post('checkDomain', 'CustomerController@checkDomain');
+Route::post('storeAction', 'CustomerController@storeAction');
