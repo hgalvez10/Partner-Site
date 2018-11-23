@@ -34,3 +34,5 @@
 <script src="{{ asset('js/pages/dashboard.js') }}"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="{{ asset('js/demo.js') }}"></script>
+<!-- slippry -->
+<script src="{{ asset('plugins/slippry/slippry.min.js') }}"></script>

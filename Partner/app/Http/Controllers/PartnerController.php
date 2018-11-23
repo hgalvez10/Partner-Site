@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 use App\Partner;
 use App\User;
+use App\Balance;
 
 
 class PartnerController extends Controller
@@ -62,13 +64,28 @@ class PartnerController extends Controller
             'income' => 0,
             'country' => mb_strtolower($request->country),
             'city' => mb_strtolower($request->city),
-            'status' => 'Inactivo'
+            'status' => 'Activo'
         ]);
+
+        Balance::create([
+            'funds' => 10000,
+            'partner_id' => $user['id']
+        ]);
+
 
         session()->flash('title', '¡Éxito!');
         session()->flash('message', 'Se ha registrado el Partner exitosamente!');
         session()->flash('type', 'success');
 
         return redirect('/partner/create');
+    }
+
+    public function getTransactions()
+    {
+        $transactions = DB::table('transactions')
+                            ->where('partner_id','=', auth()->user()->id)
+                            ->get();
+
+        return view('transactions-all', compact('transactions'));
     }
 }

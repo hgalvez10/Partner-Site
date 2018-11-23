@@ -68,7 +68,7 @@
                 <div class="pull-right">
                   <a href="#" class="btn btn-default btn-flat" href="{{ route('logout') }}"
                   onclick="event.preventDefault();
-                                document.getElementById('logout-form').submit();">Sign out</a>
+                                document.getElementById('logout-form').submit();">Salir</a>
                   <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                       @csrf
                   </form>

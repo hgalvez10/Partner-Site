@@ -47,7 +47,7 @@
 					                </span>
 					                @endif
 				                </div>
-				                <button type="button" onclick="check()" class="btn btn-info">Verificar</button>
+				                <button id="checkButton" type="button" onclick="check()" class="btn btn-info" style="display: none">Verificar</button>
 				              </div>
 				            </div>
 				          </div>
@@ -77,7 +77,7 @@
 					            <div class="col-md-6">
 					              <div class="form-group has-feedback {{ $errors->has('period') ? 'has-error': '' }}">
 					                <label>Periodo de Registro</label>
-					                <input type="number" class="form-control" placeholder="periodo en años" name="period">
+					                <input type="number" class="form-control" placeholder="periodo en años" min="1" max="9" name="period" required>
 					                @if ($errors->has('period'))
 					                <span class="help-block">
 					                  <strong>{{ $errors->first('period') }}</strong>
@@ -88,7 +88,7 @@
 					            <div class="col-md-6">
 					              	<div class="form-group has-feedback {{ $errors->has('nameserver') ? 'has-error': '' }}">
 					                	<label>NameServer</label>
-					               		<input type="text" class="form-control" placeholder="nameserver del dominio" name="nameserver">
+					               		<input type="text" class="form-control" placeholder="nameserver del dominio" name="nameserver" required>
 					                	@if ($errors->has('nameserver'))
 					                	<span class="help-block">
 					                  		<strong>{{ $errors->first('nameserver') }}</strong>
@@ -98,7 +98,7 @@
 					            </div>
 
 					            <!--  Administrador -->
-					            <div class="col-md-12">
+					            <div class="col-md-12" id="questionAdmin">
 					            	<div class="form-group">
 					            		<label>¿Quieres ser el contacto administrador?</label>
 					            		<div class="radio">
@@ -117,7 +117,7 @@
 					            		<div class="col-md-6">
 					            			<div class="form-group has-feedback {{ $errors->has('name-admin') ? 'has-error': '' }}">
 							                	<label>Nombre</label>
-							               		<input type="text" class="form-control" placeholder="nombre del contacto administrador" name="name-admin">
+							               		<input id="name-admin" type="text" class="form-control" placeholder="nombre del contacto administrador" name="name-admin" required>
 							                	@if ($errors->has('name-admin'))
 							                	<span class="help-block">
 							                  		<strong>{{ $errors->first('name-admin') }}</strong>
@@ -128,7 +128,7 @@
 					            		<div class="col-md-6">
 					            			<div class="form-group has-feedback {{ $errors->has('org-admin') ? 'has-error': '' }}">
 							                	<label>Organización</label>
-							               		<input type="text" class="form-control" placeholder="organización del contacto administrador" name="org-admin">
+							               		<input id="org-admin" type="text" class="form-control" placeholder="organización del contacto administrador" name="org-admin" required>
 							                	@if ($errors->has('org-admin'))
 							                	<span class="help-block">
 							                  		<strong>{{ $errors->first('org-admin') }}</strong>
@@ -139,7 +139,7 @@
 					            		<div class="col-md-6">
 					            			<div class="form-group has-feedback {{ $errors->has('street-admin') ? 'has-error': '' }}">
 							                	<label>Dirección</label>
-							               		<input type="text" class="form-control" placeholder="dirección del contacto administrador" name="street-admin">
+							               		<input id="street-admin" type="text" class="form-control" placeholder="dirección del contacto administrador" name="street-admin" required>
 							                	@if ($errors->has('street-admin'))
 							                	<span class="help-block">
 							                  		<strong>{{ $errors->first('street-admin') }}</strong>
@@ -150,7 +150,7 @@
 					            		<div class="col-md-6">
 					            			<div class="form-group has-feedback {{ $errors->has('city-admin') ? 'has-error': '' }}">
 							                	<label>Ciudad</label>
-							               		<input type="text" class="form-control" placeholder="ciudad del contacto administrador" name="city-admin">
+							               		<input id="city-admin" type="text" class="form-control" placeholder="ciudad del contacto administrador" name="city-admin" required>
 							                	@if ($errors->has('city-admin'))
 							                	<span class="help-block">
 							                  		<strong>{{ $errors->first('city-admin') }}</strong>
@@ -161,7 +161,7 @@
 					            		<div class="col-md-6">
 					            			<div class="form-group has-feedback {{ $errors->has('sp-admin') ? 'has-error': '' }}">
 							                	<label>Región</label>
-							               		<input type="text" class="form-control" placeholder="región del contacto administrador" name="sp-admin">
+							               		<input id="sp-admin" type="text" class="form-control" placeholder="región del contacto administrador" name="sp-admin" required>
 							                	@if ($errors->has('sp-admin'))
 							                	<span class="help-block">
 							                  		<strong>{{ $errors->first('sp-admin') }}</strong>
@@ -172,7 +172,7 @@
 					            		<div class="col-md-6">
 					            			<div class="form-group has-feedback {{ $errors->has('voice-admin') ? 'has-error': '' }}">
 							                	<label>Número Telefónico</label>
-							               		<input type="text" class="form-control" placeholder="número telefónico del contacto administrador" name="voice-admin">
+							               		<input id="voice-admin" type="number" pattern="[0-9]{9}" maxlength= "4" size = "5" class="form-control" placeholder="número telefónico del contacto administrador" name="voice-admin" required>
 							                	@if ($errors->has('voice-admin'))
 							                	<span class="help-block">
 							                  		<strong>{{ $errors->first('voice-admin') }}</strong>
@@ -183,7 +183,7 @@
 					            		<div class="col-md-6">
 					            			<div class="form-group has-feedback {{ $errors->has('email-admin') ? 'has-error': '' }}">
 							                	<label>Correo Electrónico</label>
-							               		<input type="email" class="form-control" placeholder="correo electrónico del contacto administrador" name="email-admin">
+							               		<input id="email-admin" type="email" class="form-control" placeholder="correo electrónico del contacto administrador" name="email-admin" required>
 							                	@if ($errors->has('email-admin'))
 							                	<span class="help-block">
 							                  		<strong>{{ $errors->first('email-admin') }}</strong>
@@ -191,10 +191,24 @@
 							                	@endif
 					              			</div>
 					            		</div>
+					            		<div class="col-md-12">
+					            			<button type="button" onclick="createContactAdmin()" class="btn btn-success pull-right" id="createAdmin">Crear</button>
+					            		</div>
 					            	</div>
 					            </div>
-
-					            <div class="col-md-12">
+					            <div class="col-md-12" id="adminOk" hidden>
+					            	<div class="alert alert-success">
+									  <strong>Éxito!</strong> Se creó el contacto administrativo.
+									</div>
+		            			</div>
+		            			<div class="col-md-12" id="adminFailed" hidden>
+					            	<div class="alert alert-danger">
+									  <strong>Error!</strong> Hubo problemas para crear el contacto administrativo.
+									</div>
+		            			</div>
+		            			<!---------------------------------------------- Admin Contact ------>
+		            			<!------------Billing Contact ----->
+					            <div class="col-md-12" id="questionBilling">
 					            	<div class="form-group">
 					            		<label>¿Quieres ser el contacto Financiero?</label>
 					            		<div class="radio">
@@ -213,7 +227,7 @@
 					            		<div class="col-md-6">
 					            			<div class="form-group has-feedback {{ $errors->has('name-billing') ? 'has-error': '' }}">
 							                	<label>Nombre</label>
-							               		<input type="text" class="form-control" placeholder="nombre del contacto financiero" name="name-billing">
+							               		<input id="name-billing" type="text" class="form-control" placeholder="nombre del contacto financiero" name="name-billing" required>
 							                	@if ($errors->has('name-billing'))
 							                	<span class="help-block">
 							                  		<strong>{{ $errors->first('name-billing') }}</strong>
@@ -224,7 +238,7 @@
 					            		<div class="col-md-6">
 					            			<div class="form-group has-feedback {{ $errors->has('org-billing') ? 'has-error': '' }}">
 							                	<label>Organización</label>
-							               		<input type="text" class="form-control" placeholder="organización del contacto financiero" name="org-billing">
+							               		<input id="org-billing" type="text" class="form-control" placeholder="organización del contacto financiero" name="org-billing" required>
 							                	@if ($errors->has('org-billing'))
 							                	<span class="help-block">
 							                  		<strong>{{ $errors->first('org-billing') }}</strong>
@@ -235,7 +249,7 @@
 					            		<div class="col-md-6">
 					            			<div class="form-group has-feedback {{ $errors->has('street-billing') ? 'has-error': '' }}">
 							                	<label>Dirección</label>
-							               		<input type="text" class="form-control" placeholder="dirección del contacto financiero" name="street-admin">
+							               		<input id="street-admin" type="text" class="form-control" placeholder="dirección del contacto financiero" name="street-admin" required>
 							                	@if ($errors->has('street-billing'))
 							                	<span class="help-block">
 							                  		<strong>{{ $errors->first('street-billing') }}</strong>
@@ -246,7 +260,7 @@
 					            		<div class="col-md-6">
 					            			<div class="form-group has-feedback {{ $errors->has('city-billing') ? 'has-error': '' }}">
 							                	<label>Ciudad</label>
-							               		<input type="text" class="form-control" placeholder="ciudad del contacto financiero" name="city-billing">
+							               		<input id="city-billing" type="text" class="form-control" placeholder="ciudad del contacto financiero" name="city-billing" required>
 							                	@if ($errors->has('city-billing'))
 							                	<span class="help-block">
 							                  		<strong>{{ $errors->first('city-billing') }}</strong>
@@ -257,7 +271,7 @@
 					            		<div class="col-md-6">
 					            			<div class="form-group has-feedback {{ $errors->has('sp-billing') ? 'has-error': '' }}">
 							                	<label>Región</label>
-							               		<input type="text" class="form-control" placeholder="región del contacto financiero" name="sp-billing">
+							               		<input id="sp-billing" type="text" class="form-control" placeholder="región del contacto financiero" name="sp-billing" required>
 							                	@if ($errors->has('sp-billing'))
 							                	<span class="help-block">
 							                  		<strong>{{ $errors->first('sp-billing') }}</strong>
@@ -268,7 +282,7 @@
 					            		<div class="col-md-6">
 					            			<div class="form-group has-feedback {{ $errors->has('voice-billing') ? 'has-error': '' }}">
 							                	<label>Número Telefónico</label>
-							               		<input type="text" class="form-control" placeholder="número telefónico del contacto financiero" name="voice-billing">
+							               		<input id="voice-billing" type="text" class="form-control" placeholder="número telefónico del contacto financiero" name="voice-billing" required>
 							                	@if ($errors->has('voice-billing'))
 							                	<span class="help-block">
 							                  		<strong>{{ $errors->first('voice-billing') }}</strong>
@@ -279,7 +293,7 @@
 					            		<div class="col-md-6">
 					            			<div class="form-group has-feedback {{ $errors->has('email-billing') ? 'has-error': '' }}">
 							                	<label>Correo Electrónico</label>
-							               		<input type="email" class="form-control" placeholder="correo electrónico del contacto financiero" name="email-billing">
+							               		<input id="email-billing" type="email" class="form-control" placeholder="correo electrónico del contacto financiero" name="email-billing" required>
 							                	@if ($errors->has('email-billing'))
 							                	<span class="help-block">
 							                  		<strong>{{ $errors->first('email-billing') }}</strong>
@@ -287,10 +301,23 @@
 							                	@endif
 					              			</div>
 					            		</div>
+					            		<div class="col-md-12">
+					            			<button type="button" onclick="createContactBilling()" class="btn btn-success pull-right" id="createBilling">Crear</button>
+					            		</div>
 					            	</div>
 					            </div>
-
-					            <div class="col-md-12">
+					            <div class="col-md-12" id="BillingOk" hidden>
+					            	<div class="alert alert-success">
+									  <strong>Éxito!</strong> Se creó el contacto financiero.
+									</div>
+		            			</div>
+		            			<div class="col-md-12" id="BillingFailed" hidden>
+					            	<div class="alert alert-danger">
+									  <strong>Error!</strong> Hubo problemas para crear el contacto financiero.
+									</div>
+		            			</div>
+		            			<!-------- Tech Contact --------------->
+					            <div class="col-md-12" id="questionTech">
 					            	<div class="form-group">
 					            		<label>¿Quieres ser el contacto Técnico?</label>
 					            		<div class="radio">
@@ -309,7 +336,7 @@
 					            		<div class="col-md-6">
 					            			<div class="form-group has-feedback {{ $errors->has('name-tech') ? 'has-error': '' }}">
 							                	<label>Nombre</label>
-							               		<input type="text" class="form-control" placeholder="nombre del contacto técnico" name="name-tech">
+							               		<input id="name-tech" type="text" class="form-control" placeholder="nombre del contacto técnico" name="name-tech" required>
 							                	@if ($errors->has('name-tech'))
 							                	<span class="help-block">
 							                  		<strong>{{ $errors->first('name-tech') }}</strong>
@@ -320,7 +347,7 @@
 					            		<div class="col-md-6">
 					            			<div class="form-group has-feedback {{ $errors->has('org-tech') ? 'has-error': '' }}">
 							                	<label>Organización</label>
-							               		<input type="text" class="form-control" placeholder="organización del contacto técnico" name="org-tech">
+							               		<input id="org-tech" type="text" class="form-control" placeholder="organización del contacto técnico" name="org-tech" required>
 							                	@if ($errors->has('org-tech'))
 							                	<span class="help-block">
 							                  		<strong>{{ $errors->first('org-tech') }}</strong>
@@ -331,7 +358,7 @@
 					            		<div class="col-md-6">
 					            			<div class="form-group has-feedback {{ $errors->has('street-tech') ? 'has-error': '' }}">
 							                	<label>Dirección</label>
-							               		<input type="text" class="form-control" placeholder="dirección del contacto técnico" name="street-admin">
+							               		<input id="street-admin" type="text" class="form-control" placeholder="dirección del contacto técnico" name="street-admin" required>
 							                	@if ($errors->has('street-tech'))
 							                	<span class="help-block">
 							                  		<strong>{{ $errors->first('street-tech') }}</strong>
@@ -342,7 +369,7 @@
 					            		<div class="col-md-6">
 					            			<div class="form-group has-feedback {{ $errors->has('city-tech') ? 'has-error': '' }}">
 							                	<label>Ciudad</label>
-							               		<input type="text" class="form-control" placeholder="ciudad del contacto técnico" name="city-tech">
+							               		<input id="city-tech" type="text" class="form-control" placeholder="ciudad del contacto técnico" name="city-tech" required>
 							                	@if ($errors->has('city-tech'))
 							                	<span class="help-block">
 							                  		<strong>{{ $errors->first('city-tech') }}</strong>
@@ -353,7 +380,7 @@
 					            		<div class="col-md-6">
 					            			<div class="form-group has-feedback {{ $errors->has('sp-tech') ? 'has-error': '' }}">
 							                	<label>Región</label>
-							               		<input type="text" class="form-control" placeholder="región del contacto técnico" name="sp-tech">
+							               		<input id="sp-tech" type="text" class="form-control" placeholder="región del contacto técnico" name="sp-tech" required>
 							                	@if ($errors->has('sp-tech'))
 							                	<span class="help-block">
 							                  		<strong>{{ $errors->first('sp-tech') }}</strong>
@@ -364,7 +391,7 @@
 					            		<div class="col-md-6">
 					            			<div class="form-group has-feedback {{ $errors->has('voice-tech') ? 'has-error': '' }}">
 							                	<label>Número Telefónico</label>
-							               		<input type="text" class="form-control" placeholder="número telefónico del contacto técnico" name="voice-tech">
+							               		<input id="voice-tech" type="text" class="form-control" placeholder="número telefónico del contacto técnico" name="voice-tech" required>
 							                	@if ($errors->has('voice-tech'))
 							                	<span class="help-block">
 							                  		<strong>{{ $errors->first('voice-tech') }}</strong>
@@ -375,7 +402,7 @@
 					            		<div class="col-md-6">
 					            			<div class="form-group has-feedback {{ $errors->has('email-tech') ? 'has-error': '' }}">
 							                	<label>Correo Electrónico</label>
-							               		<input type="email" class="form-control" placeholder="correo electrónico del contacto técnico" name="email-tech">
+							               		<input id="email-tech" type="email" class="form-control" placeholder="correo electrónico del contacto técnico" name="email-tech" required>
 							                	@if ($errors->has('email-tech'))
 							                	<span class="help-block">
 							                  		<strong>{{ $errors->first('email-tech') }}</strong>
@@ -383,8 +410,21 @@
 							                	@endif
 					              			</div>
 					            		</div>
+					            		<div class="col-md-12">
+					            			<button type="button" onclick="createContactTech()" class="btn btn-success pull-right" id="createTech">Crear</button>
+					            		</div>
 					            	</div>
 					            </div>
+					            <div class="col-md-12" id="TechOk" hidden>
+					            	<div class="alert alert-success">
+									  <strong>Éxito!</strong> Se creó el contacto técnico.
+									</div>
+		            			</div>
+		            			<div class="col-md-12" id="TechFailed" hidden>
+					            	<div class="alert alert-danger">
+									  <strong>Error!</strong> Hubo problemas para crear el contacto técnico.
+									</div>
+		            			</div>
 				          	</div>
 				    	</div>
 
@@ -414,7 +454,6 @@
 			  </div>
 		</section>
 	</div>
-
 	
  </div>
 @endsection
@@ -445,7 +484,6 @@
                 'domain': $('#domain').val(),
             },
 			success: function(data) {
-				console.log(data['response']);
 				if(data['response'] == true)
 				{
 					$("#nameDomain").text("El nombre de dominio "+$('#domain').val()+".cl"+"  está disponible");
@@ -461,6 +499,125 @@
 		});
 	}
 </script>
+<script>
+	function createContactAdmin()
+	{
+		$.ajax({
+			type: 'POST',
+			url: '/createContactAdmin',
+			data: {
+                '_token': "{{ csrf_token() }}",
+                'name': $('#name-admin').val(),
+                'org': $('#org-admin').val(),
+                'street': $('#street-admin').val(),
+                'city': $('#city-admin').val(),
+                'region': $('#sp-admin').val(),
+                'voice': $('#voice-admin').val(),
+                'email': $('#email-admin').val(),
+            },
+			success: function(data) {
+				if (data['response'] == true) 
+				{
+					//desabilito los campos
+					$("#admin *").attr("disabled", "disabled").off('click');
+					$("#questionAdmin *").attr("disabled", "disabled").off('click');
+					$('#createAdmin').hide();
+
+					// Mostrar label
+					$('#adminFailed').hide();
+					$('#adminOk').show();
+
+					$("#admin_id").val(data['id']);
+				}
+				else
+				{
+					$('#adminOk').hide();
+					$('#adminFailed').show();
+				}
+
+			}
+		});
+	}
+</script>
+
+<script>
+	function createContactBilling()
+	{
+		$.ajax({
+			type: 'POST',
+			url: '/createContactBilling',
+			data: {
+                '_token': "{{ csrf_token() }}",
+                'name': $('#name-billing').val(),
+                'org': $('#org-billing').val(),
+                'street': $('#street-billing').val(),
+                'city': $('#city-billing').val(),
+                'region': $('#sp-billing').val(),
+                'voice': $('#voice-billing').val(),
+                'email': $('#email-billing').val(),
+            },
+			success: function(data) {
+				if (data['response'] == true) 
+				{
+					//desabilito los campos
+					$("#billing *").attr("disabled", "disabled").off('click');
+					$("#questionBilling *").attr("disabled", "disabled").off('click');
+					$('#createBilling').hide();
+
+					// Mostrar label
+					$('#BillingOk').show();
+					$("#billing_id").val(data['id']);
+				}
+				else
+				{
+					$('#BillingOk').hide();
+					$('#BillingFailed').show();
+				}
+			}
+		});
+	}
+</script>
+
+<script>
+	function createContactTech()
+	{
+		$.ajax({
+			type: 'POST',
+			url: '/createContactTech',
+			data: {
+                '_token': "{{ csrf_token() }}",
+                'name': $('#name-tech').val(),
+                'org': $('#org-tech').val(),
+                'street': $('#street-tech').val(),
+                'city': $('#city-tech').val(),
+                'region': $('#sp-tech').val(),
+                'voice': $('#voice-tech').val(),
+                'email': $('#email-tech').val(),
+            },
+			success: function(data) {
+				if (data['response'] == true) 
+				{
+					//desabilito los campos
+					$("#tech *").attr("disabled", "disabled").off('click');
+					$("#questionTech *").attr("disabled", "disabled").off('click');
+					$('#createTech').hide();
+
+					// Mostrar label
+					$('#TechFailed').hide();
+					$('#TechOk').show();
+					//cambiar id por el id del contacto recien creado
+					$("#tech_id").val(data['id']);
+				}
+				else
+				{
+					$('#TechOk').hide();
+					$('#TechFailed').show();
+				}
+
+			}
+		});
+	}
+</script>
 
 <script>
  	$("#domain").keyup(function () {
@@ -468,6 +625,11 @@
         	$("#msjsuccess").hide();
         	$("#msjerror").hide();
         	$("#buyButton").hide();
+        	$("#checkButton").hide();
+        }
+        else
+        {
+        	$("#checkButton").show();
         }
 	});
 </script>
@@ -485,6 +647,7 @@
 		$("#completardatos").removeClass("btn btn-primary").addClass("btn btn-success");
 		$("#completardatos").attr("disabled",false);
 		$("#verificacion").attr("disabled",true);
+		
 	}
 
 	function volverStep1()
@@ -544,6 +707,7 @@
     	document.getElementById("radio-admin-si").checked = false;
 
     	$("#admin").show();
+
 
     	//completo datos y envio por ajax retornando el id  del contacto y Cambiar id de la wea contacto id admin por el id del wea pero del contacto
 	}

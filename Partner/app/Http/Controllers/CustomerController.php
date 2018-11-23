@@ -4,12 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Customer;
-use App\User;
 use Illuminate\Support\Facades\Hash;
 use GuzzleHttp\Client;
+use Illuminate\Support\Facades\DB;
+use App\Customer;
+use App\User;
 use App\Contact;
 use App\Action;
+use App\Order;
+use Carbon\Carbon;
+use App\Domain;
+use App\AuxContact;
 
 class CustomerController extends Controller
 {
@@ -40,12 +45,21 @@ class CustomerController extends Controller
         ];
 
         $json_request_action = json_encode($data_request_action);
+        
+        // CREAR ORDEN
+        $id_orden = Order::create([
+            'domainName'  => mb_strtolower($request->domain).'.cl',
+            'customer_id' => auth()->user()->id,
+            'price'       => 1000,
+            'status'      => 'Pendiente'
+        ]);
 
         Action::create([
             'request'     => $json_request_action,
             'status'      => 'Por Hacer',
             'partner_id'  => auth()->user()->id_father,
-            'customer_id' => auth()->user()->id
+            'customer_id' => auth()->user()->id,
+            'order_id'    => $id_orden['id']
         ]);
 
         session()->flash('title', '¡Éxito!');
@@ -78,11 +92,6 @@ class CustomerController extends Controller
     	{
     		return response()->json(array('response' => false ));
     	}
-    }
-
-    public function createContact()
-    {
-
     }
 
     public function index()
@@ -167,13 +176,6 @@ class CustomerController extends Controller
             'authinfo' => 'haulmer-'.''.uniqid()
         ];
 
-        //dd(json_encode($contact));
-        /*$headers['Content-Type'] = 'application/json';
-        $datajson = json_encode($contact);
-        $client = new Client(['base_uri' => 'http://127.0.0.1:5000/api/v1.0/registrar/']);
-        $response = $client->request('POST','createContact/' ,  array('headers' => $headers, 'body' => $datajson));
-        $json = (array)json_decode($response->getBody());*/
-
         $client = new \GuzzleHttp\Client;
         $options = [
             'body' => json_encode($contact),
@@ -182,10 +184,147 @@ class CustomerController extends Controller
         $client->post('http://127.0.0.1:5000/api/v1.0/registrar/createContact/', $options);
         //dd($json);
 
+        // VER si se hace correctamente para retornar mensaje de error o de registro
         session()->flash('title', '¡Éxito!');
         session()->flash('message', 'Se ha registrado el Cliente exitosamente!');
         session()->flash('type', 'success');
 
         return redirect('/customer/create');
     }
+
+    public function getDomains()
+    {
+        $usercontact = DB::table('contacts')
+                            ->where('email','=', auth()->user()->email)
+                            ->get();
+
+        $domains = DB::table('domains')
+                        ->where('registrant_id', '=', $usercontact[0]->id)
+                        ->get();
+
+        $nameCustomer = auth()->user()->name;
+        return view('domains-all', compact('domains', 'nameCustomer'));
+    }
+
+    public function getOrders()
+    {
+        $orders = DB::table('orders')
+                            ->where('customer_id','=', auth()->user()->id)
+                            ->get();
+
+        return view('orders-all', compact('orders'));
+    }
+
+    public function getDomainsByCustomer(Customer $customer)
+    {
+        //dd($customer);
+        $usercontact = DB::table('contacts')
+                            ->where('email','=', $customer->email)
+                            ->get();
+
+        $domains = DB::table('domains')
+                        ->where('registrant_id', '=', $usercontact[0]->id)
+                        ->get();
+
+        $nameCustomer = auth()->user()->name;
+        return view('domains-all', compact('domains', 'nameCustomer'));
+    }
+
+    public function renewDomain(Request $request, $id)
+    {
+       
+        $domain = Domain::find($id);
+        $name_domain = $domain->domainName;
+        $exp_date = Carbon::parse($domain->expirate_date)->format('Y-m-d');
+        //dd($exp_date);
+        $domain_data = [
+            'domainName'=>$name_domain,
+            'period'=>$request->period,
+            'exDate'=> $exp_date
+        ];
+
+        $client = new \GuzzleHttp\Client;
+        $options = [
+            'body' => json_encode($domain_data),
+            'headers' => ['Content-Type' => 'application/json'],
+        ];
+        $response  = $client->post('http://127.0.0.1:5000/api/v1.0/registrar/renewDomain/', $options);
+
+        $json = (array)json_decode($response->getBody());
+        //dd($json);
+
+        if ($json['Code'] == 1000) {
+            
+            $domain->expirate_date = $json['Expiration Date'];
+            $domain->save();
+
+            session()->flash('title', '¡Éxito!');
+            session()->flash('message', 'el dominio se ha renovado exitosamente!');
+            session()->flash('type', 'success');
+
+            return redirect('/myDomains');
+        }
+       
+        session()->flash('title', '¡Error!');
+        session()->flash('message', 'Upss dominio no renovado!');
+        session()->flash('type', 'danger');
+
+        return redirect('/myDomains');
+
+    }
+
+    public function createContact(Request $request)
+    {
+        $admin_contact = AuxContact::create([
+            'email' => $request['email'],
+            'owner' => auth()->user()->id
+        ]);
+
+
+        $contact = [
+            'id' => "coc".'-'.$admin_contact['id'],
+            'name' => mb_strtolower($request['name']),
+            'org' => mb_strtolower($request['org']),
+            'street' => mb_strtolower($request['street']),
+            'city' => mb_strtolower($request['city']),
+            'sp' => mb_strtolower($request['region']),
+            'cc' => 'cl',
+            'voice' => '+56.'.''.mb_strtolower($request['voice']),
+            'email' => mb_strtolower($request['email']),
+            'authinfo' => 'haulmer-'.''.uniqid()
+        ];
+
+        $client = new \GuzzleHttp\Client;
+        $options = [
+            'body' => json_encode($contact),
+            'headers' => ['Content-Type' => 'application/json'],
+        ];
+
+        $response = $client->post('http://127.0.0.1:5000/api/v1.0/registrar/createContact/', $options);
+        
+        $json = (array)json_decode($response->getBody());
+
+        if ($json['Code'] == 1000)
+        {
+            $new_contact = Contact::create([
+                'id' => "coc".'-'.$admin_contact['id'],
+                'name' => mb_strtolower($request['name']),
+                'org' => mb_strtolower($request['org']),
+                'street' => mb_strtolower($request['street']),
+                'city' => mb_strtolower($request['city']),
+                'sp' => mb_strtolower($request['region']),
+                'cc' => 'cl',
+                'voice' => '+56.'.''.mb_strtolower($request['voice']),
+                'email' => mb_strtolower($request['email']),
+                'authinfo' => 'haulmer-'.''.uniqid()
+            ]);
+
+            return response()->json(array('response' => true, 'id' => $contact['id']));
+
+        }
+        return response()->json(array('response' => false));
+
+    }
+       
+        
 }

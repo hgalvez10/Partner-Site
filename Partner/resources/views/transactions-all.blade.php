@@ -1,15 +1,14 @@
 @extends('layouts.app')
 
 @section('content')
-
 <section class="content-header">
 	<h1>
-		Cliente
-		<small>Todos</small>
+		Transacciones
+		<small>Todas</small>
 	</h1>
 	<ol class="breadcrumb">
-		<li><a href="/"><i class="fa fa-home"></i> Home</a></li>
-		<li class="active">Cliente</li>
+		<li><a href="/home"><i class="fa fa-home"></i> Home</a></li>
+		<li class="active">Transacciones</li>
 	</ol>
 </section>
 
@@ -24,33 +23,23 @@
 
 	<div class="box box-primary">
 		<div class="box-header with-border">
-			<h3 class="box-title">Todos los clientes</h3>
+			<h3 class="box-title">Todas las transacciones</h3>
 		</div>
 		<div class="box-body">
 			<table id="table" class="table">
 				<thead>
 					<tr>
-						<th>Nombre</th>
-						<th>Organización</th>
-						<th>Email</th>
-						<th>Dirección</th>
-						<th>Estado</th>
-						<th class="disable-sorting text-center">Acciones</th>
+						<th>Descripción</th>
+						<th>Monto</th>
+						<th>Fecha Emisión</th>
 					</tr>
 				</thead>
 				<tbody>
-					@foreach($customers as $customer)
+					@foreach($transactions as $transaction)
 					<tr>
-						<td>{{ ucfirst($customer->name) }}</td>
-						<td>{{ $customer->org }}</td>
-						<td>{{ $customer->email }}</td>
-						<td>{{ $customer->address() }}</td>
-						<td>{{ $customer->status }}</td>
-
-						<td class="text-center">
-							<a href="/domains/{{ $customer->id}}/view" class="btn btn-warning btn-xs">Editar</a>
-							<button onclick="" class="btn btn-danger btn-xs">Eliminar</button>
-						</td>
+						<td>{{ ucfirst($transaction->description) }}</td>
+						<td>{{ $transaction->balance}}</td>
+						<td>{{ $transaction->created_at }}</td>
 					</tr>
 					@endforeach
 				</tbody>
@@ -61,53 +50,6 @@
 		</div>
 	</div>
 </section>
-
-@endsection
-
-@section('modal')
-<div class="modal fade" id="message_modal" tabindex="-1" role="dialog" aria-hidden="true">
-	<div class="modal-dialog modal-notice">
-		<div class="modal-content">
-			<div class="modal-header no-border-header">
-				<h5 class="modal-title" id="message_modal_title"></h5>
-			</div>
-			<div class="modal-body">
-				<p id="message_modal_content"></p>
-				<div class="picture d-none">
-                    <img src="" class="img-rounded img-responsive" style="max-width: 250px; max-height: 250px;">
-                </div>
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-primary btn-link" data-dismiss="modal">Aceptar</button>
-			</div>
-		</div>
-	</div>
-</div>
-<div class="modal fade" id="delete_modal" tabindex="-1" role="dialog" aria-hidden="true">
-	<div class="modal-dialog modal-notice">
-		<div class="modal-content">
-			<div class="modal-header no-border-header">
-				<h5 class="modal-title">Eliminar Cliente</h5>
-			</div>
-			<div class="modal-body text-center">
-				<h5>¿Está seguro de que quiere eliminar este Cliente: <strong id="delete_modal_detail"></strong>?</h5>
-				
-			</div>
-			<div class="modal-footer">
-				<div class="left-side">
-					<button type="button" class="btn btn-default btn-link" data-dismiss="modal">No, cancelar</button>
-				</div>
-				<div class="divider"></div>
-				<div class="right-side">
-					<form id="delete_modal_form" method="POST">
-						@csrf
-						<button type="submit" class="btn btn-danger btn-link">Si, eliminar</button>
-					</form>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
 @endsection
 
 @section('style')
@@ -115,13 +57,6 @@
 @endsection('style')
 
 @section('script')
-<script>
-	function show_delete_modal(id, name) {
-		$('#delete_modal_detail').text(name);
-		$('#delete_modal_form').attr('action', '/customer/'+id+'/delete');
-		$('#delete_modal').modal('toggle');
-	}
-</script>
 
 <script src="{{ asset('plugins/datatables/datatables.min.js') }}"></script>
 

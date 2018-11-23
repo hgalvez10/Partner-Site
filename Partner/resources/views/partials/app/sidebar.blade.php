@@ -3,11 +3,24 @@
     <section class="sidebar">
       <!-- sidebar menu: : style can be found in sidebar.less -->
       <ul class="sidebar-menu" data-widget="tree">
-        <li class="header">Menú Principal</li>
+        <!-- Menu Ppal-->
+        @if( Auth::user()->type == 1 )
+        <li class="header">Menú Principal Haulmer</li>
         <li><a href="/home"><i class="fa fa-home"></i> <span>Home</span></a></li>
+        @endif
+        @if( Auth::user()->type == 2 )
+        <li class="header">Menú Principal Partners</li>
+        <li><a href="/home"><i class="fa fa-line-chart"></i> <span>Resumen</span></a></li>
+        @endif
+        @if( Auth::user()->type == 3 )
+        <li class="header">Menú Principal Clientes</li>
+        @endif
+        <!--end-->
+        
+        @if( Auth::user()->type == 1 )
         <li class="treeview">
           <a href="#">
-            <i class="fa fa-users"></i>
+            <i class="fa fa-handshake-o"></i>
             <span>Partner</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
@@ -18,6 +31,8 @@
             <li><a href="/partners"><i class="fa fa-circle-o"></i> Ver Todos</a></li>
           </ul>
         </li>
+        @endif
+        @if( Auth::user()->type == 2 )
         <li class="treeview">
           <a href="#">
             <i class="fa fa-users"></i>
@@ -31,20 +46,22 @@
             <li><a href="/customers"><i class="fa fa-circle-o"></i> Ver Todos</a></li>
           </ul>
         </li>
+        <!--Other section-->
         <li>
-          <a href="pages/mailbox/mailbox.html">
-            <i class="fa fa-envelope"></i> <span>Dominios</span>
-            <span class="pull-right-container">
-              <small class="label pull-right bg-green">16</small>
-            </span>
+          <a href="/mytransactions">
+            <i class="fa fa-credit-card"></i> <span>Mis Transacciones</span>
           </a>
-          <ul class="treeview-menu">
-            <li><a href="pages/UI/icons.html"><i class="fa fa-circle-o"></i> Ver Todos</a></li>
-          </ul>
         </li>
+        <li>
+          <a href="#">
+            <i class="fa fa-money"></i> <span>Cargar Fondos</span>
+          </a>
+        </li>
+        @endif
+        @if( Auth::user()->type == 3 )
          <li class="treeview">
           <a href="#">
-            <i class="fa fa-users"></i>
+            <i class="fa fa-shopping-bag"></i>
             <span>Mis Dominios</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
@@ -52,9 +69,24 @@
           </a>
           <ul class="treeview-menu">
             <li><a href="/buyDomain"><i class="fa fa-circle-o"></i> Comprar</a></li>
-            <li><a href=""><i class="fa fa-circle-o"></i> Ver Todos</a></li>
+            <li><a href="/myDomains"><i class="fa fa-circle-o"></i> Ver Todos</a></li>
           </ul>
         </li>
+        <!--Other section-->
+        <li>
+          <a href="/myOrders">
+            <i class="fa fa-shopping-cart"></i> <span>Mis Ordenes</span>
+          </a>
+        </li>
+        @endif
+        @if( Auth::user()->type == 1)
+        <!--Other section-->
+        <li>
+          <a href="/domains">
+            <i class="fa fa-registered"></i> <span>Dominios</span>
+          </a>
+        </li>
+        @endif
         <!--<li>
           <a href="pages/mailbox/mailbox.html">
             <i class="fa fa-envelope"></i> <span>Mailbox</span>
