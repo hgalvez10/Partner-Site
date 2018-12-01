@@ -53,7 +53,7 @@
           </a>
         </li>
         <li>
-          <a href="#">
+          <a href="/balance">
             <i class="fa fa-money"></i> <span>Cargar Fondos</span>
           </a>
         </li>

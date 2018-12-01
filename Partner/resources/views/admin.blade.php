@@ -85,7 +85,6 @@
   <!-- /.row -->
   <!-- Main row -->
   <!-- /.row (main row) -->
-
 </section>
 <!-- /.content -->
 @endsection

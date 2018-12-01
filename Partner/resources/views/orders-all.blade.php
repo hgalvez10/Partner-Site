@@ -26,7 +26,7 @@
 			<h3 class="box-title">Todas las ordenes</h3>
 		</div>
 		<div class="box-body">
-			<table id="table" class="table">
+			<table id="table" class="table" data-order='[[3, "desc"]]'>
 				<thead>
 					<tr>
 						<th>Nombre de dominio</th>
@@ -39,7 +39,7 @@
 					@foreach($orders as $order)
 					<tr>
 						<td>{{ ucfirst($order->domainName) }}</td>
-						<td>{{ $order->price}}</td>
+						<td>${{ $order->price}}</td>
 						<td>{{ $order->status}}</td>
 						<td>{{ $order->created_at }}</td>
 					</tr>

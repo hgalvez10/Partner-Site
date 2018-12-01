@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\DB;
 use App\Customer;
+use App\Partner;
 use App\User;
 use App\Contact;
 use App\Action;
@@ -15,6 +17,8 @@ use App\Order;
 use Carbon\Carbon;
 use App\Domain;
 use App\AuxContact;
+use App\Transaction;
+use App\Mail\CreateAccount;
 
 class CustomerController extends Controller
 {
@@ -72,10 +76,25 @@ class CustomerController extends Controller
 
     public function buyDomain()
     {
-        $usercontact = Contact::where('email',"=",auth()->user()->email)->get();
-        //dd($usercontact[0]);
-        $contact = "cid-".auth()->user()->id;
-        return view('partner-site',compact('contact'));
+        $usercontact = DB::table('contacts')
+                                ->where('email',"=",auth()->user()->email)
+                                ->get();
+
+        $contact = $usercontact[0]->id;
+
+        $usercustomer = DB::table('customers')
+                                ->where('id',"=",auth()->user()->id)
+                                ->get();
+
+        $customer = $usercustomer[0];
+
+        $userpartner = DB::table('partners')
+                                ->where('id',"=",auth()->user()->id_father)
+                                ->get();
+
+        $partner = $userpartner[0];
+
+        return view('partner-site', compact('contact', 'customer', 'partner'));
     }
 
     public function checkDomain(Request $request)
@@ -96,8 +115,22 @@ class CustomerController extends Controller
 
     public function index()
     {
-    	$customers = Customer::All();
-
+        if(auth()->user()->type == 1)
+        {
+            $customers = Customer::All();
+        }
+    	else
+        {
+            $customer_user = DB::table('users')->where('id_father','=',auth()->user()->id)->get();
+            $customers = array();
+            foreach ($customer_user as $customer) 
+            {
+                $customer_find = Customer::find($customer->id);//DB::table('customers')->where('email','=',$customer->email)->get();
+                //dd($customer_find);
+                array_push($customers, $customer_find);
+            }
+        }
+        //dd($customers);
     	return view('admin.customer.index', compact('customers'));
     }
 
@@ -128,10 +161,14 @@ class CustomerController extends Controller
                 ->withErrors($validator)
                 ->withInput();
         }
+
+        $longitud = 8;
+        $pass = substr(MD5(rand(5, 100)), 0, $longitud);
+
         $user = User::create([
             'name' => mb_strtolower($request->name),
             'email' => mb_strtolower($request->email),
-            'password' => Hash::make('123456'),
+            'password' => bcrypt($pass),
             'type' => 3,
             'id_father' => auth()->user()->id
         ]);
@@ -145,7 +182,7 @@ class CustomerController extends Controller
             'sp' => mb_strtolower($request->sp),
             'voice' => mb_strtolower($request->voice),
             'email' => mb_strtolower($request->email),
-            'status' => 'Inactivo'
+            'status' => 'Activo'
         ]);
 
         //CREAR CONTACT EN DB
@@ -162,7 +199,6 @@ class CustomerController extends Controller
             'authinfo' => 'haulmer-'.''.uniqid()
         ]);
 
-        //dd(json_decode($new_contact));
         $contact = [
             'id' => "cid".'-'.$user['id'],
             'name' => mb_strtolower($request->name),
@@ -181,8 +217,13 @@ class CustomerController extends Controller
             'body' => json_encode($contact),
             'headers' => ['Content-Type' => 'application/json'],
         ];
-        $client->post('http://127.0.0.1:5000/api/v1.0/registrar/createContact/', $options);
-        //dd($json);
+        $response = $client->post('http://127.0.0.1:5000/api/v1.0/registrar/createContact/', $options);
+        $json = (array)json_decode($response->getBody());
+        
+        if ($json['Msg'] != "Object exists") 
+        {
+            Mail::to($request['email'])->send(new CreateAccount($user,$pass));
+        }
 
         // VER si se hace correctamente para retornar mensaje de error o de registro
         session()->flash('title', '¡Éxito!');
@@ -251,7 +292,6 @@ class CustomerController extends Controller
         $response  = $client->post('http://127.0.0.1:5000/api/v1.0/registrar/renewDomain/', $options);
 
         $json = (array)json_decode($response->getBody());
-        //dd($json);
 
         if ($json['Code'] == 1000) {
             
@@ -261,8 +301,45 @@ class CustomerController extends Controller
             session()->flash('title', '¡Éxito!');
             session()->flash('message', 'el dominio se ha renovado exitosamente!');
             session()->flash('type', 'success');
+            
+            if (auth()->user()->type == 3) 
+            {
+                $income = DB::table('partners')
+                            ->where('id', auth()->user()->id_father)
+                            ->increment('income', 500);
 
-            return redirect('/myDomains');
+                $balance = DB::table('balances')
+                                ->where('partner_id', auth()->user()->id_father)
+                                ->decrement('funds', 1000);
+
+                $transaction = Transaction::create([
+                    'description' => 'Renovación del dominio'.' '.$name_domain,
+                    'partner_id' => auth()->user()->id_father,
+                    'customer_id' => auth()->user()->id,
+                    'balance' => 1000
+                ]);
+                
+                return redirect('/myDomains');
+            }
+            else
+            {
+                $income = DB::table('partners')
+                            ->where('id', auth()->user()->id)
+                            ->increment('income', 500);
+
+                $balance = DB::table('balances')
+                                ->where('partner_id', auth()->user()->id)
+                                ->decrement('funds', 1000);
+
+                $transaction = Transaction::create([
+                    'description' => 'Renovación del dominio'.' '.$name_domain,
+                    'partner_id' => auth()->user()->id,
+                    'customer_id' => 0,
+                    'balance' => 1000
+                ]);
+
+                return redirect('/domains');
+            }
         }
        
         session()->flash('title', '¡Error!');

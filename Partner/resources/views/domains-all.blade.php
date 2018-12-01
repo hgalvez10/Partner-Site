@@ -26,11 +26,10 @@
 			<h3 class="box-title">Todos los dominios asociados</h3>
 		</div>
 		<div class="box-body">
-			<table id="table" class="table">
+			<table id="table" class="table" data-order='[[1, "asc"]]'>
 				<thead>
 					<tr>
 						<th>Nombre de dominio</th>
-						<th>Registrado por</th>
 						<th>Fecha Creación</th>
 						<th>Fecha Expiración</th>
 						<th class="disable-sorting text-center">Acciones</th>
@@ -40,7 +39,6 @@
 					@foreach($domains as $domain)
 					<tr>
 						<td>{{ ucfirst($domain->domainName) }}</td>
-						<td>{{ $domain->registrant_id }}</td>
 						<td>{{ $domain->created_at }}</td>
 						<td>{{ $domain->expirate_date }}</td>
 
@@ -71,7 +69,7 @@
 				<div class="modal-body">
 	             	<div class="form-group has-feedback {{ $errors->has('period') ? 'has-error': '' }}">
 	                	<label>Periodo de Renovación</label>
-	                	<input type="number" class="form-control" placeholder="periodo en años" name="period">
+	                	<input type="number" class="form-control" placeholder="periodo en años" min="1" max="9" name="period">
 		                @if ($errors->has('period'))
 		                <span class="help-block">
 		                  <strong>{{ $errors->first('period') }}</strong>

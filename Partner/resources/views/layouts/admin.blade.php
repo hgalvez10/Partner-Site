@@ -21,6 +21,7 @@
     <link rel="stylesheet" href="{{ asset('plugins/font-awesome/css/font-awesome.min.css') }}">
     <!-- Ionicons -->
     <link rel="stylesheet" href="{{ asset('plugins/Ionicons/css/ionicons.min.css') }}">
+    
     @yield('style')
 </head>
 <body>
@@ -54,11 +55,11 @@
                     <!-- Authentication Links -->
                     @guest
                         <li class="nav-item">
-                            <a class="nav-link" href="{{ route('login') }}">Login</a>
+                            <a class="nav-link fa fa-sign-in" href="{{ route('login') }}"> Login</a>
                         </li>
                         <li class="nav-item">
                             @if (Route::has('register'))
-                                <a class="nav-link" href="{{ route('register') }}">Registrar</a>
+                                <a class="nav-link fa fa-user-plus" href="{{ route('register') }}"> Registrar</a>
                             @endif
                         </li>
                     @else
@@ -68,7 +69,7 @@
                             </a>
 
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item fa fa-window-close-o" href="{{ route('logout') }}"
+                                <a class="dropdown-item fa fa-sign-out" href="{{ route('logout') }}"
                                    onclick="event.preventDefault();
                                                  document.getElementById('logout-form').submit();">
                                     Salir
@@ -89,11 +90,14 @@
             @yield('content')
         </div>
     </div>
+
+    @include('partials.app.scripts')
     <script src="{{ asset('js/app.js') }}" defer></script>
     <!-- jQuery 3 -->
     <script src="{{ asset('plugins/jquery/dist/jquery.min.js') }}"></script>
     <!-- slippry -->
     <script src="{{ asset('plugins/slippry/slippry.min.js') }}"></script>
     @yield('script')
+
 </body>
 </html>

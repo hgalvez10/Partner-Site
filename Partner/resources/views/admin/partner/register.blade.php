@@ -1,6 +1,7 @@
 @extends('layouts.admin')
 
 @section('content')
+<br/>
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
@@ -8,7 +9,7 @@
                 <div class="card-header">Registro de Partners</div>
 
                 <div class="card-body">
-                    <form method="POST" action="/register_partner">
+                    <form method="POST" action="/registerPartner">
                         @csrf
 
                         <div class="form-group row">

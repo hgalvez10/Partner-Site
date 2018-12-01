@@ -26,7 +26,7 @@
 			<h3 class="box-title">Todas las transacciones</h3>
 		</div>
 		<div class="box-body">
-			<table id="table" class="table">
+			<table id="table" class="table" data-order='[[2, "desc"]]'>
 				<thead>
 					<tr>
 						<th>Descripción</th>
@@ -38,7 +38,7 @@
 					@foreach($transactions as $transaction)
 					<tr>
 						<td>{{ ucfirst($transaction->description) }}</td>
-						<td>{{ $transaction->balance}}</td>
+						<td>${{ $transaction->balance}}</td>
 						<td>{{ $transaction->created_at }}</td>
 					</tr>
 					@endforeach
@@ -76,12 +76,12 @@
                 ], 
             "language": {
                 "sProcessing":     "Procesando...",
-                "sLengthMenu":     "Mostrar MENU registros",
+                "sLengthMenu":     "Mostrar _MENU_ registros",
                 "sZeroRecords":    "No se encontraron resultados",
                 "sEmptyTable":     "Ningún dato disponible en esta tabla",
-                "sInfo":           "Mostrando registros del START al END de un total de TOTAL registros",
+                "sInfo":           "Mostrando registros del _START_ al _END_ de un total de _TOTAL_ registros",
                 "sInfoEmpty":      "Mostrando registros del 0 al 0 de un total de 0 registros",
-                "sInfoFiltered":   "(filtrado de un total de MAX registros)",
+                "sInfoFiltered":   "(filtrado de un total de _MAX_ registros)",
                 "sInfoPostFix":    "",
                 "sSearch":         "Buscar:",
                 "sUrl":            "",
